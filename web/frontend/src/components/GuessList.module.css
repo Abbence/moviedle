@@ -1,0 +1,110 @@
+.guessesContainer {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 400px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+}
+
+.guessesHeader {
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #fafafa;
+}
+
+.guessesHeader h2 {
+  font-size: 1.125rem;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.guessesList {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  color: #999;
+  text-align: center;
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.tableHeaderWrapper {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: white;
+  padding: 12px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.guessesContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+}
+
+.guessItem {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.guessesList::-webkit-scrollbar {
+  width: 8px;
+}
+
+.guessesList::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.guessesList::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.guessesList::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+@media (max-width: 768px) {
+  .guessesContainer {
+    min-height: 350px;
+  }
+
+  .guessesHeader h2 {
+    font-size: 1rem;
+  }
+
+  .tableHeaderWrapper {
+    padding: 10px;
+  }
+
+  .guessesContent {
+    gap: 6px;
+    padding: 10px;
+  }
+}

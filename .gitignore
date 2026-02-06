@@ -1,0 +1,8 @@
+.venv
+.vscode
+data/
+**/*__pycache__/
+web/frontend/dist/
+web/frontend/node_modules/
+web/frontend/package-lock.json
+.env

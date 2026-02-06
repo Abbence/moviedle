@@ -1,0 +1,172 @@
+.cell {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+/* Fixed widths matching header columns 
+ * TO ADD NEW COLUMN: Copy a block below and change the field name + width
+ */
+.cell[data-field="titleType"] {
+  min-width: 100px;
+  max-width: 100px;
+}
+
+.cell[data-field="year"] {
+  min-width: 80px;
+  max-width: 80px;
+}
+
+.cell[data-field="runtimeMinutes"] {
+  min-width: 110px;
+  max-width: 110px;
+}
+
+.cell[data-field="imdbRating"] {
+  min-width: 110px;
+  max-width: 110px;
+}
+
+.cell[data-field="imdbVoteCount"] {
+  min-width: 120px;
+  max-width: 120px;
+}
+
+.cell[data-field="directorNames"],
+.cell[data-field="genres"] {
+  min-width: 180px;
+  max-width: 180px;
+}
+
+.indicator {
+  font-weight: bold;
+  min-width: 16px;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.content {
+  flex: 1;
+  overflow: hidden;
+  line-height: 1.3;
+}
+
+.setCell .content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+
+.setContent {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+}
+
+.setItem {
+  font-size: 0.8rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.moreIndicator {
+  font-size: 0.75rem;
+  font-style: italic;
+  color: inherit;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+/* Color schemes - using faint backgrounds */
+.match {
+  background-color: #e8f5e9;
+  color: #1b5e20;
+  border: 1px solid #a5d6a7;
+}
+
+.higher {
+  background-color: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffe0b2;
+}
+
+.lower {
+  background-color: #f3e5f5;
+  color: #4a148c;
+  border: 1px solid #e1bee7;
+}
+
+.no_match {
+  background-color: #ffebee;
+  color: #b71c1c;
+  border: 1px solid #ef9a9a;
+}
+
+.partial {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+  border: 1px solid #90caf9;
+}
+
+.unknown {
+  background-color: #fafafa;
+  color: #616161;
+  border: 1px solid #bdbdbd;
+}
+
+/* Hover effect to show full tooltip */
+.cell:hover {
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 1024px) {
+  .cell {
+    min-width: 90px !important;
+    max-width: 90px !important;
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+
+  .setItem {
+    font-size: 0.75rem;
+  }
+
+  .moreIndicator {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .cell {
+    min-width: 70px !important;
+    max-width: 70px !important;
+    font-size: 0.75rem;
+    padding: 6px 6px;
+    gap: 4px;
+  }
+
+  .indicator {
+    font-size: 0.9rem;
+    min-width: 14px;
+  }
+
+  .setItem {
+    font-size: 0.7rem;
+  }
+
+  .moreIndicator {
+    font-size: 0.65rem;
+  }
+}

@@ -1,0 +1,104 @@
+.headerRow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #495057;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.titleHeader {
+  min-width: 250px;
+  max-width: 250px;
+  flex-shrink: 0;
+}
+
+.attributesHeader {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+  overflow-x: auto;
+}
+
+.columnHeader {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Fixed widths for each field - must match AttributeCell.module.css
+ * TO ADD NEW COLUMN: Copy a block below and change the field name + width
+ */
+.columnHeader[data-field="titleType"] {
+  min-width: 100px;
+  max-width: 100px;
+}
+
+.columnHeader[data-field="year"] {
+  min-width: 80px;
+  max-width: 80px;
+}
+
+.columnHeader[data-field="runtimeMinutes"] {
+  min-width: 110px;
+  max-width: 110px;
+}
+
+.columnHeader[data-field="imdbRating"] {
+  min-width: 110px;
+  max-width: 110px;
+}
+
+.columnHeader[data-field="imdbVoteCount"] {
+  min-width: 120px;
+  max-width: 120px;
+}
+
+.columnHeader[data-field="directorNames"] {
+  min-width: 180px;
+  max-width: 180px;
+}
+
+.columnHeader[data-field="genres"] {
+  min-width: 180px;
+  max-width: 180px;
+}
+
+@media (max-width: 1024px) {
+  .titleHeader {
+    min-width: 200px;
+    max-width: 200px;
+  }
+
+  .columnHeader {
+    min-width: 90px !important;
+    max-width: 90px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .headerRow {
+    font-size: 0.75rem;
+    padding: 10px 12px;
+  }
+
+  .titleHeader {
+    min-width: 150px;
+    max-width: 150px;
+  }
+
+  .columnHeader {
+    min-width: 70px !important;
+    max-width: 70px !important;
+    padding: 4px 6px;
+  }
+}
