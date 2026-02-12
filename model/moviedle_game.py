@@ -29,36 +29,31 @@ class MoviedleGame:
     self.isGameOver: bool = False
     self.isGameWon: bool = False
 
-    self.candidateMovie = self.generate_random_candidate(candidator)
+    self.candidateMovie = self._generate_random_candidate(candidator)
 
     print(f"Generated candidate movie: {self.candidateMovie}") # TODO remove or log properly
 
   def get_tries(self) -> int:
     return len(self.guesses)
 
-  def generate_random_candidate(self, candidator: ICandidationType) -> GameMovie:
+  def _generate_random_candidate(self, candidator: ICandidationType) -> GameMovie:
     """
     Generates random film candidate using given candidator.
     Fetches many films and disregards all but one randomly selected film.
     """
 
-    # Random generation done in Python. NOTE Upgrade idea: do it completely inside database
-    rand_val: float = Random().random()
+    # NOTE: Primitive random selection method on database level, not efficient for large candidate sets.
+    query_stmt = select(MoviesFinal)\
+      .where(candidator.get_candidation_filter(), notNullCandidator.get_candidation_filter())\
+      .order_by(func.random())\
+      .limit(1)
 
-    count_stmt = select(func.count(MoviesFinal.titleid)).where(candidator.get_candidation_filter(), notNullCandidator.get_candidation_filter())
-    query_stmt = select(MoviesFinal).where(candidator.get_candidation_filter(), notNullCandidator.get_candidation_filter())
-
-    size: int = self.db_session.execute(count_stmt).scalar_one_or_none() or 0
-    candidate_index = int(size * rand_val) + 1
-
-    result = self.db_session.execute(query_stmt.limit(candidate_index)).scalars().all()
+    result = self.db_session.execute(query_stmt).scalar_one_or_none()
 
     if not result:
       raise Exception("No candidate movies found with the given candidation filter.")
     
-    candidate: MoviesFinal = result[-1]
-
-    return GameMovie.from_moviesfinal(candidate)
+    return GameMovie.from_moviesfinal(result)
     
   def make_guess(self, guessed_movie_titleid: str) -> Guess:
     if self.isGameOver:
