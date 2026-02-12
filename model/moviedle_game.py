@@ -14,8 +14,6 @@ from model.guess import Guess
 
 from model.game_movie import GameMovie
 
-notNullCandidator: ICandidationType = NotNullAttributeCandidator()
-
 """
 Candidate constraint: cannot have any of its values null - that would greatly increase difficulty (in guessing too, but also it would require telling the contestants these null values in advance since it will not match with any of their matches)
 
@@ -47,7 +45,7 @@ class MoviedleGame:
 
     # NOTE: Primitive random selection method on database level, not efficient for large candidate sets.
     query_stmt = select(MoviesFinal)\
-      .where(candidator.get_candidation_filter(), notNullCandidator.get_candidation_filter())\
+      .where(candidator.get_candidation_filter(), NotNullAttributeCandidator().get_candidation_filter())\
       .order_by(func.random())\
       .limit(1)
 

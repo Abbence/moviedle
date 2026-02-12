@@ -39,7 +39,31 @@ export interface GiveUpResponse {
   isGameOver: boolean;
   isGameWon: boolean;
   tries: number;
-  revealedCandidateMovie: GameMovie;
+  candidateMovie: GameMovie;
+}
+
+/* Guess the Movie types */
+export interface MovieAttributes {
+  titleType: string;
+  year: number;
+  runtimeMinutes: number;
+  imdbRating: number;
+  imdbVoteCount: number;
+  directorNames: string[];
+  genres: string[];
+}
+
+export interface GTMGameState {
+  slot_count: number;
+  guessed_mask: boolean[];
+  score: number;
+  attributes: MovieAttributes[];
+}
+
+export interface GTMGuessResult {
+  correct: boolean;
+  slot: number;
+  score: number;
 }
 
 /* Configuration */

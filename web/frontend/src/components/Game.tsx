@@ -3,6 +3,7 @@ import { GameMovie, Guess, GameState, GiveUpResponse } from '../types';
 import { api } from '../api';
 import { SearchBar } from './SearchBar';
 import { GuessList } from './GuessList';
+import { MovieRow } from './MovieRow';
 import styles from './Game.module.css';
 
 /**
@@ -43,7 +44,7 @@ export const Game: React.FC = () => {
     setRevealedMovie(null);
 
     try {
-      const { data } = await api.startGame(selectedCandidator);
+      const { data } = await api.moviedle.startGame(selectedCandidator);
       setGameState(data);
     } catch (err) {
       setError('Failed to start game');
@@ -60,7 +61,7 @@ export const Game: React.FC = () => {
     setError(null);
 
     try {
-      const { data: guess } = await api.makeGuess(movie.titleid);
+      const { data: guess } = await api.moviedle.makeGuess(movie.titleid);
 
       setGameState((prev) => {
         if (!prev) return prev;
@@ -93,14 +94,14 @@ export const Game: React.FC = () => {
     setError(null);
 
     try {
-      const { data } = await api.giveUp();
+      const { data } = await api.moviedle.giveUp();
       setGameState({
         guesses: data.guesses,
         isGameOver: data.isGameOver,
         isGameWon: data.isGameWon,
         tries: data.tries,
       });
-      setRevealedMovie(data.revealedCandidateMovie);
+      setRevealedMovie(data.candidateMovie);
     } catch (err) {
       setError('Failed to give up');
     } finally {
@@ -195,9 +196,21 @@ export const Game: React.FC = () => {
       )}
 
       {gameState?.isGameOver && !gameState.isGameWon && revealedMovie && (
-        <div className={styles.infoBanner}>
-          The movie was: <strong>{revealedMovie.primarytitle}</strong>
-          {revealedMovie.hungariantitle && ` (${revealedMovie.hungariantitle})`}
+        <div className={styles.modalOverlay} onClick={() => setRevealedMovie(null)}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h2>The movie was:</h2>
+              <button
+                className={styles.modalCloseButton}
+                onClick={() => setRevealedMovie(null)}
+              >
+                ×
+              </button>
+            </div>
+            <div className={styles.modalContent}>
+              <MovieRow movie={revealedMovie} />
+            </div>
+          </div>
         </div>
       )}
     </div>

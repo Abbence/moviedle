@@ -34,7 +34,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onMovieSelected, disabled 
     setIsLoading(true);
     setError(null);
     try {
-      const { data } = await api.findMovies(searchTerm);
+      const { data } = await api.moviedle.findMovies(searchTerm);
       setResults(data);
       setIsOpen(true);
     } catch (err) {

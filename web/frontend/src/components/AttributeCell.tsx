@@ -33,12 +33,13 @@ export const AttributeCell: React.FC<AttributeCellProps> = ({
       case GuessedAttributeRelation.PARTIAL:
         return '◐';
       case GuessedAttributeRelation.UNKNOWN:
-        return '?';
+        return null;
     }
   };
 
   const isSetField = fieldName === 'genres' || fieldName === 'directorNames';
   const MAX_VISIBLE_ITEMS = 3;
+  const indicator = getIndicator();
 
   const renderContent = () => {
     if (!value) return '—';
@@ -74,7 +75,7 @@ export const AttributeCell: React.FC<AttributeCellProps> = ({
       title={label}
       data-field={fieldName}
     >
-      <div className={styles.indicator}>{getIndicator()}</div>
+      {indicator && <div className={styles.indicator}>{indicator}</div>}
       <div className={styles.content}>
         {renderContent()}
       </div>
