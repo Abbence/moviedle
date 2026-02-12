@@ -7,6 +7,7 @@ from sqlalchemy.sql.expression import ColumnElement, text
 from sqlalchemy.orm import Session
 from sqlalchemy import select, func, and_, create_engine
 
+import config
 from model.candidation_types import ICandidationType, NotNullAttributeCandidator, Pop500K_HasHungarianTitleCandidator, TopNVoteCountCandidator
 from model.database.mappings import MoviesFinal
 from model.guess import Guess
@@ -31,7 +32,9 @@ class MoviedleGame:
 
     self.candidateMovie = self._generate_random_candidate(candidator)
 
-    print(f"Generated candidate movie: {self.candidateMovie}") # TODO remove or log properly
+    if config.MOVIEDLE_BLURT_OUT_CANDIDATE_MOVIE:
+      print(f"Generated candidate movie: {self.candidateMovie}")
+      print(f"IMDB link: https://www.imdb.com/title/{self.candidateMovie.titleid}/")
 
   def get_tries(self) -> int:
     return len(self.guesses)
