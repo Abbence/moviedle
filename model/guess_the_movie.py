@@ -2,6 +2,7 @@ from typing import Optional
 from pydantic import BaseModel
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
+import config
 from model.candidation_types import ICandidationType, NotNullAttributeCandidator
 from model.database.mappings import MoviesFinal
 from model.game_movie import GameMovie, TitleType
@@ -41,6 +42,12 @@ class GuessTheMoviesGame():
 
     self.guessed_mask: list[bool] = [False] * self.slotCount
     self._secret_films : list[GameMovie] = self._candidate_random_movies()
+
+    if config.GUESS_THE_MOVIE_BLURT_CANDIDATES:
+      print("Generated candidate movies:")
+      for idx, movie in enumerate(self._secret_films):
+        print(f"Slot {idx}: {movie.primarytitle} ({movie.titleid})")
+        print(f"IMDB link: https://www.imdb.com/title/{movie.titleid}/")
 
   def _candidate_random_movies(self) -> list[GameMovie]:
     # NOTE: Primitive random selection method on database level, not efficient for large candidate sets.

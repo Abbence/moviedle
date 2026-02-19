@@ -5,9 +5,14 @@ import { SlotRow } from './SlotRow';
 import { TableHeader } from './TableHeader';
 import styles from './GuessTheMovieGame.module.css';
 
+interface GuessedMovie {
+  primarytitle: string;
+  hungariantitle?: string;
+}
+
 export const GuessTheMovieGame: React.FC = () => {
   const [gameState, setGameState] = useState<GTMGameState | null>(null);
-  const [guessedTitles, setGuessedTitles] = useState<(string | null)[]>([]);
+  const [guessedMovies, setGuessedMovies] = useState<(GuessedMovie | null)[]>([]);
   const [candidators, setCandidators] = useState<string[]>([]);
   const [selectedCandidator, setSelectedCandidator] = useState<string>('');
   const [slotCount, setSlotCount] = useState<number>(5);
@@ -39,7 +44,7 @@ export const GuessTheMovieGame: React.FC = () => {
     try {
       const { data } = await api.gtm.startGame(slotCount, selectedCandidator || undefined);
       setGameState(data);
-      setGuessedTitles(new Array(data.slot_count).fill(null));
+      setGuessedMovies(new Array(data.slot_count).fill(null));
     } catch (err) {
       setError('Failed to start game. ' + (err instanceof Error ? err.message : ''));
     } finally {
@@ -62,10 +67,13 @@ export const GuessTheMovieGame: React.FC = () => {
           newMask[slot] = true;
           return { ...prev, guessed_mask: newMask, score: data.score };
         });
-        setGuessedTitles((prev) => {
-          const newTitles = [...prev];
-          newTitles[slot] = movie.primarytitle;
-          return newTitles;
+        setGuessedMovies((prev) => {
+          const newMovies = [...prev];
+          newMovies[slot] = {
+            primarytitle: movie.primarytitle,
+            hungariantitle: movie.hungariantitle,
+          };
+          return newMovies;
         });
         setFeedback({ slot, correct: true });
       } else {
@@ -136,7 +144,7 @@ export const GuessTheMovieGame: React.FC = () => {
                   slot={index}
                   attributes={attr}
                   isGuessed={gameState.guessed_mask[index]}
-                  guessedTitle={guessedTitles[index] ?? undefined}
+                  guessedMovie={guessedMovies[index] ?? undefined}
                   onGuess={handleGuess}
                 />
               ))}

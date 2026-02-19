@@ -5,11 +5,16 @@ import { AttributeCell } from './AttributeCell';
 import { GuessedAttributeRelation } from '../types';
 import styles from './SlotRow.module.css';
 
+interface GuessedMovie {
+  primarytitle: string;
+  hungariantitle?: string;
+}
+
 interface SlotRowProps {
   slot: number;
   attributes: MovieAttributes;
   isGuessed: boolean;
-  guessedTitle?: string;
+  guessedMovie?: GuessedMovie;
   onGuess: (slot: number, movie: GameMovie) => void;
 }
 
@@ -17,7 +22,7 @@ export const SlotRow: React.FC<SlotRowProps> = ({
   slot,
   attributes,
   isGuessed,
-  guessedTitle,
+  guessedMovie,
   onGuess,
 }) => {
   const [query, setQuery] = useState('');
@@ -82,10 +87,15 @@ export const SlotRow: React.FC<SlotRowProps> = ({
     <div className={`${styles.slotRow} ${isGuessed ? styles.guessed : ''}`}>
       {/* Title/Search Column */}
       <div className={styles.titleColumn} ref={containerRef}>
-        {isGuessed ? (
+        {isGuessed && guessedMovie ? (
           <div className={styles.guessedTitle}>
             <span className={styles.checkmark}>✓</span>
-            {guessedTitle}
+            <div className={styles.guessedTitleText}>
+              <div className={styles.primaryTitle}>{guessedMovie.primarytitle}</div>
+              {guessedMovie.hungariantitle && (
+                <div className={styles.hungarianTitle}>({guessedMovie.hungariantitle})</div>
+              )}
+            </div>
           </div>
         ) : (
           <div className={styles.searchWrapper}>

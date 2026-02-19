@@ -1,10 +1,26 @@
 # Moviedle (filmkóba)
 
-Attribútum alapú **kitalálós játék filmekkel** - kiadás éve, műfajok, időtartam, IMDB értékelés, rendezők, stb. viszonya alapján lehet találgatni a rejtélyes filmre. 
+Attribútum alapú, *wordle-szerű* **kitalálós játékok filmekkel** - kiadás éve, műfajok, időtartam, IMDB értékelés, rendezők, stb. viszonya alapján lehet két különböző kitalálós játékot játszani.
+
+## Játékok
+
+### Moviedle
+Klasszikus *wordle-szerű* játék - a játék elején generálódik egy kitalálandó film (a bal alsó sarokban kiválasztható filter-kategóriát figyelembevéve). Ezután kell találgatni tetszőleges filmcímekkel (az interaktív keresőmezőt használva), majd a tippünk mellett megjelenik, hogy a kitalálandó film adatai milyen viszonyban állnak a tippelt film adataihoz képest.
+
+![Felhasználói felület Moviedle játék során, az eddigi 3 tippelt film adatai külön cellákban színekkel és szimbólumokkal mutatják, hogy milyen viszonyban vannak a kitalálandó filméhez képest](./screenshot01_moviedle.png)
+Az interaktív keresőmező:
+![Az interaktív keresőmező részleges egyezés esetén is kiad találatokat - a találatok mellett látszik minden adata a filmnek, beleértve az eredeti-és magyar nyelvű címeket is](./screenshot02_moviedle.png)
+![Találat esetén a legutóbbi film összes adatcellája zöld (talált), illetve egy lebegő üzenet is ezt mutatja](./screenshot03_moviedle.png)
+
+### Guess the movie
+A játék kezdtben több (3, 5, 7 vagy 10) filmet sorsol ki, amiknek láthatjuk az összes adatát - kivéve a címét. A játék lényege, hogy minden sorban megtaláljuk a filmhez tartozó címet. Ehhez ugyancsak egy-egy interaktív keresőmezőt kell használni, ezesetben viszont csak a filmcímeket (és az egyértelműség kedvéért a kiadási évet) láthatjuk.
+
+![A helyesen kitalált sorokat zöld szín és pipa jelzi, a többi sorban egy-egy keresőmező található](./screenshot04_gtm.png)
+![Egy keresőmezőbe félig begépelt címrészletre több találat is létezik, ezek közül kell a megfelelőt kiválasztani tippelésre](./screenshot05_gtm.png)
 
 
 ## Technológiák
-Kliens-szerver modellel működő webalkalmazás, **React** frontenddel és **FastAPI** backenddel, illetve az **IMDB adatbázisa** alapján épített saját, lokális adatbázissal. Jelenleg a projekt **PostgreSQL**-t használ, de csak a CSV importálás és a fuzzy text search (trigram) indexek specifikusak erre az SQL dialektusra.
+Kliens-szerver modellel működő webalkalmazás, **React** frontenddel és **FastAPI** backenddel, illetve az [**IMDB adatbázisa**](https://developer.imdb.com/non-commercial-datasets/) alapján épített saját, lokális adatbázissal. Jelenleg a projekt **PostgreSQL**-t használ, de csak a CSV importálás és a fuzzy text search (trigram) indexek specifikusak erre az SQL dialektusra.
 
 ## Adatbázis előkészítése ("felhasználói")
 
@@ -17,7 +33,7 @@ psql -u username
 CREATE DATABASE moviedle;
 GRANT ALL PRIVILEGES ON DATABASE moviedle TO username;
 
-GRANT pg_read_server_files TO username;
+GRANT pg_read_server_files TO username; -- mert az importálást a szervergépen (vagy lokális futtatás esetén a saját gépen) lévő fájlokból csináljuk. (*)
 
 ALTER ROLE username WITH SUPERUSER; -- az indexek bekapcsolása miatt kell csak, tulajdonképpen kihagyható lépés
 
@@ -25,6 +41,7 @@ ALTER ROLE username WITH SUPERUSER; -- az indexek bekapcsolása miatt kell csak,
 \c moviedle
 GRANT ALL PRIVILEGES ON SCHEMA public TO username;
 ```
+`(*)`: technikailag lehetséges más módon is importálni, ehhez érdemes áttanulmányozni az [import_final_postgres.sql](./model/database/import_final_postgres.sql) állományt, illetve a [PostgreSQL dokumentációt](https://www.postgresql.org/docs/current/).
 
 ### Python környezet és init_db.py
 
@@ -53,7 +70,7 @@ python init_db.py --schema --only-final /path/movies.tsv
 
 ## Adatbázis előkészítése (fejlesztői)
 
-Az alkalmazás által használható adatbázis kialakításahoz az IMDB adataiból kell kiindulni, ezeket kell a (PostgreSQL) adatbázisszerverre feltölteni, az adatbázisba importálni. Ez után már az adatbáziskezelő-rendszer eszközeivel szűrjük ki és kapcsoljuk össze a játék számára fontos adatokat egy külön táblába - ezzel fogunk végül dolgozni.
+Az alkalmazás által használható adatbázis kialakításahoz az IMDB adataiból kell kiindulni, ezeket kell a (PostgreSQL) adatbázisszerverre feltölteni, az adatbázisba importálni. Ezután már az adatbáziskezelő-rendszer eszközeivel szűrjük ki és kapcsoljuk össze a játék számára fontos adatokat egy külön táblába - ezzel fog végül csak dolgozni az tényleges webalkalmazás.
 
 Szükséges létrehozni egy PostgreSQL adatbázist a szerverünkön. Például:
 ```sql
@@ -62,7 +79,7 @@ psql -u username
 CREATE DATABASE moviedle;
 GRANT ALL PRIVILEGES ON DATABASE moviedle TO username;
 
-GRANT pg_read_server_files TO username;
+GRANT pg_read_server_files TO username; -- mert az importálást a szervergépen (vagy lokális futtatás esetén a saját gépen) lévő fájlokból csináljuk. (*)
 
 ALTER ROLE username WITH SUPERUSER; -- az indexek bekapcsolása miatt kell csak, tulajdonképpen kihagyható lépés
 
@@ -70,6 +87,7 @@ ALTER ROLE username WITH SUPERUSER; -- az indexek bekapcsolása miatt kell csak,
 \c moviedle
 GRANT ALL PRIVILEGES ON SCHEMA public TO username;
 ```
+`(*)`: technikailag lehetséges más módon is importálni, ehhez érdemes áttanulmányozni az [import_final_postgres.sql](./model/database/import_final_postgres.sql) állományt, illetve a [PostgreSQL dokumentációt](https://www.postgresql.org/docs/current/).
 
 ### Adatok beszerzése
 Az [IMDB oldaláról](https://datasets.imdbws.com/) be kell szerezni az alábbi TSV fájlokat: 

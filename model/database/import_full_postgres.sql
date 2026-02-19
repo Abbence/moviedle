@@ -1,9 +1,10 @@
--- Importing
+-- Importing full IMDB dataset into Postgres for later processing.
+-- '{PATH}' is replaced by the init_db.py script at runtime, so do not overwrite it here.
 
 -- IMDB has double quotes (") dangling inside title fields, so quoting should be "turned off"
 copy title_basics_raw from '{PATH}/title.basics.tsv' WITH (format csv, DELIMITER E'\t', header true, null '\N', quote E'\b');
 
-copy title_akas_raw from '{PATH}/title.akas.hu.tsv' WITH (format csv, DELIMITER E'\t', header true, null '\N', quote E'\b');
+copy title_akas_raw from '{PATH}/title.akas.tsv' WITH (format csv, DELIMITER E'\t', header true, null '\N', quote E'\b');
 
 copy title_crew_raw from '{PATH}/title.crew.tsv' WITH (format csv, DELIMITER E'\t', header true, null '\N', quote E'\b');
 

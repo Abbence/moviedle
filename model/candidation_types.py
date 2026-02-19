@@ -8,9 +8,19 @@ class ICandidationType:
   def get_candidation_filter(self) -> ColumnElement[bool]:
     return ColumnElement()
   
-class CherryPickedCandidator_1(ICandidationType):
+class CherryPickedCandidator(ICandidationType):
+  def __init__(self, titleids: str | list[str]):
+    self.title_list: list[str] = titleids if isinstance(titleids, list) else [titleids]
+
   def get_candidation_filter(self) -> ColumnElement[bool]:
-    return MoviesFinal.primarytitle.ilike("Son of Saul")
+    return MoviesFinal.titleid.in_(self.title_list)
+
+class HasGenreCandidator(ICandidationType):
+  def __init__(self, genres: str | list[str]):
+    self.genres: set[str] = set(genres)
+
+  def get_candidation_filter(self) -> ColumnElement[bool]:
+    return MoviesFinal.genres.contains(self.genres)
   
 class Pop500K_HasHungarianTitleCandidator(ICandidationType):
   def get_candidation_filter(self) -> ColumnElement[bool]:
