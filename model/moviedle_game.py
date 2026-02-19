@@ -16,8 +16,6 @@ from model.game_movie import GameMovie
 
 """
 Candidate constraint: cannot have any of its values null - that would greatly increase difficulty (in guessing too, but also it would require telling the contestants these null values in advance since it will not match with any of their matches)
-
-TODO dependency: Table?
 """
 class MoviedleGame:
   def __init__(self, candidator: ICandidationType, db_session: Session):

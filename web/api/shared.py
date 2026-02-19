@@ -27,9 +27,9 @@ def find_movies(db: Session, title_search_text: str, limit: int = 10) -> list[Ga
     
     stmt = select(MoviesFinal).where(
         or_(
-            func.lower(MoviesFinal.primarytitle).like(search_term),
-            func.lower(MoviesFinal.originaltitle).like(search_term),
-            func.lower(MoviesFinal.hungariantitle).like(search_term)
+            MoviesFinal.primarytitle.ilike(search_term),
+            MoviesFinal.originaltitle.ilike(search_term),
+            MoviesFinal.hungariantitle.ilike(search_term)
         )
     ).order_by(
         MoviesFinal.imdbVoteCount.desc().nulls_last()
